@@ -43,37 +43,15 @@ session_start()
             </div>
         </div>
     </div> -->
+    <form action="" method="get"></form>
     <div class="container products">
-        <div class="row">
-           <div class="filters">
-               <form action="index.php" method="get"></form>
-           </div>
-           <div class="row">
-                <div class="containter">
-                    <div class="row">
-                        <div class="product col-6">
-                            <img src="" alt="" class="img">
-                            <div class="info">
-                                <p class="name"></p>
-                                <div class="rating"></div>
-                                <div class=""></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-           </div>
-        </div>
+        <?php
+        include("connect.php");
+
+        ?>
+        
     </div>
 </body>
-<?php
-    include("connect.php");
-    $db = $con;
-    
-    function get_occasion($id,$db)
-    {
-        $data = mysqli_query($db,"CALL get_by_occasion($id)");
-        $dataarray = mysqli_fetch_array()
-    }
 
     
     ?>
