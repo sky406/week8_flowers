@@ -15,39 +15,13 @@ session_start()
 </head>
 <body>
     <nav></nav>
-    <!-- <div class="productpage">
-        <div class="">
-            <div class="">
-                <div class="filter">
-                    <input type="checkbox" name="valentines" id="valentines" value="1">
-                    <p class="filtername">valentines</p>
-                </div>
-            </div>
-            <div class=" products">
-                <div class="product">
-                    <div class="col-md-4 col-sm-12">
-                        <div class="product img1 placeholdercol">
-                            <img src="" alt="">
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <div class="details">
-                            <p class="name"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat aliquid sint ea. Accusamus sapiente asper</p>
-                            <div class="rating">
-                               <img src="" alt="star"> 
-                            </div>
-                            <p class="price">12</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
+    <
     <form action="" method="get"></form>
     <div class="container products">
         <?php
         include("connect.php");
-
+        include("functions.php");
+        $testvar = get_all($conn);
         ?>
         
     </div>
@@ -57,7 +31,7 @@ session_start()
     ?>
 <script>
     
-    var testvar = '<?php echo json_encode(mysqli_query($db,"CALL get_all_products()"))?>';
+    var testvar = '<?php echo json_encode($testvar);?>';
     console.log(testvar)
 
 
