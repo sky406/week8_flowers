@@ -1,0 +1,52 @@
+@mixin text($font-weight,$font-size) {
+    font-family: 'Poppins', sans-serif;
+    font-size: $font-size;
+    font-weight: $font-weight;
+    text-align: left;
+
+    
+}
+
+@mixin flexcontainer($flexdir,$wrap) 
+{
+ display: flex;
+ flex-direction: $flexdir;
+ flex-wrap: $wrap;   
+}
+
+@mixin productborder($borderwidth) {
+    
+}
+.name
+{
+    @include text(thin, 17px)
+}
+
+.price
+{
+    @include text(900, 26px)
+}
+.price::before
+{
+    content: "$";
+}
+
+
+
+// .placeholdercol
+// {
+//     background-color: black;
+// }
+
+// .img1
+// {
+//     width: 100%;
+// }
+
+// .productpage
+// {
+//     @include flexcontainer(column,no_wrap);
+//     justify-content: space-evenly;
+
+// }
+

@@ -1,0 +1,19 @@
+.name {
+  font-family: "Poppins", sans-serif;
+  font-size: 17px;
+  font-weight: thin;
+  text-align: left;
+}
+
+.price {
+  font-family: "Poppins", sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  text-align: left;
+}
+
+.price::before {
+  content: "$";
+}
+
+/*# sourceMappingURL=style.css.map */
