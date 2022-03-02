@@ -1,36 +1,15 @@
-@mixin text($font-weight,$font-size) {
-    font-family: 'Poppins', sans-serif;
-    font-size: $font-size;
-    font-weight: $font-weight;
-    text-align: left;
-
-    
+.banner{
+   margin: 0px;
+    width: 100vw;
+    height: 300px;
+    background-image: url("./flowers.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-@mixin flexcontainer($flexdir,$wrap) 
-{
- display: flex;
- flex-direction: $flexdir;
- flex-wrap: $wrap;   
+.nav{
+    display: flex;   // 
 }
-
-@mixin productborder($borderwidth) {
-    
-}
-.name
-{
-    @include text(thin, 17px)
-}
-
-.price
-{
-    @include text(900, 26px)
-}
-.price::before
-{
-    content: "$";
-}
-
 
 
 // .placeholdercol
