@@ -4,12 +4,12 @@ function get_rows($sqlquery)
     $sqldata = array();
     while($row = mysqli_fetch_array($sqlquery))
     {
-     $product = array();
-     $product[] = $row['id'];
-     $product[] = $row['price'];
-     $product[] = $row['images'];
-     $product[] = $row['rating'];
-     $product[] = $row['name'];
+     $product = array(
+     0 => $row['id'],
+     1 => $row['price'],
+     2 => $row['images'],
+     3 => $row['rating'],
+     4 => $row['name']);
      $sqldata[] = $product;
     }
     return $sqldata; 

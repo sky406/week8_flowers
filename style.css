@@ -11,4 +11,9 @@
   display: flex;
 }
 
+body {
+  padding: 0px;
+  margin: 0px;
+}
+
 /*# sourceMappingURL=style.css.map */

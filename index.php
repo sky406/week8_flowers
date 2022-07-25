@@ -19,32 +19,57 @@ session_start()
     
     <form action="" method="get">
         <nav class="nav">
-            <div><input type="submit" value="0" name="selection" class="selection">all</div>
+            <!-- <div><input type="submit" value="0" name="selection" class="selection">all</div>
             <div><input type="submit" value="1" name="selection" class="selection">valentines</div>
             <div><input type="submit" value="2" name="selection" class="selection">birthday</div>
-            <div><input type="submit" value="3" name="selection" class="selection"></div>
+            <div><input type="submit" value="3" name="selection" class="selection"></div> -->
+            <div><input type="submit" value="all" name="selection" class="selection"></div>
+            <div><input type="submit" value="valentines" name="selection" class="selection"></div>
+            <div><input type="submit" value="birthday" name="selection" class="selection"></div>
+            <div><input type="submit" value="wedding" name="selection" class="selection"></div>
         </nav>
     </form>
     
-    <div class="products container">
+    <div class="products">
         <?php
         include("connect.php");
         include("functions.php");
-        $data = get(($_GET["selection"]),$conn);
-        echo tohtml($data)
+        function pickselection($selection){
+            if($selection == "all")
+            {
+                return 0;
+            }
+            elseif($selection =="valentines")
+            {
+                return 1;
+            }
+            elseif($selection =="birthday")
+            {
+                return 2;
+            }
+            else
+            {
+                return 3;
+            }
+        }
+        echo pickselection($_GET["selection"]);
+        // $data = get(($_GET["selection"]),$conn);
+        $data = get(pickselection($_GET["selection"]),$conn)
         ?>
         <!-- process
         figure out which button was pressed 
         then make an output -->
-        <div class="product">
-            <div class="images">
-                <div class="img1"></div>
-                <div class="img2"></div>
-            </div>
-            <div class="info">
-                <h1 class="name">lorem</h1>
-                <div class="ratings"></div>
-                <h2 class="price"></h2>
+        <div class="pcontainer">
+            <div class="product">
+                <div class="images">
+                    <div class="img1"></div>
+                    <div class="img2"></div>
+                </div>
+                <div class="info">
+                    <h1 class="name">lorem</h1>
+                    <div class="ratings"></div>
+                    <h2 class="price"></h2>
+                </div>
             </div>
         </div>
         
@@ -54,21 +79,126 @@ session_start()
 
 <script>
     
+    class queuenode{
+        constructor(front=null,next=null)
+        {
+            this.front = front
+            this.next = next
+        }
+        enqueue(queue){
+            if(this.next == null)
+            {
+               this.next = queue 
+            }
+            else
+            {
+                this.next.enqueue(queue)
+            }
+        }
+        dequeue()
+        {
+           data = this.front
+           if(this.next!= null)
+            {
+            this.front = this.next.front 
+            this.next = this.next.next
+            }
+            return data
+        }
+        peek()
+        {
+            return this.front
+        }
+        buildtxt()
+        {
+            if(this.next == null){
+                return this.front
+            }
+            else
+            {
+                return this.front.concat(this.next.buildtxt())
+            }
+        }
+        isempty()
+        {
+            return this.front == null
+        }
+        emptynodes()
+        {
+            this.front = null
+            this.next = null
+        }
+
+
+    }
     const data = '<?php echo json_encode($data) ?>'
     console.log(data)
-    function backtoarray(string)
+    
+    function convertphparray(data)
     {
-        if(string[0]=="[")
+        let letterstorage = new queuenode()
+        let temparray = []
+        let products = []
+        let layer = 0
+        
+        for(let i = 0; i < data.length;i++)
         {
-            array = []
-            array.concat(backtoarray(string.substr(1)))
-            return array
-        }
-        else if(string[0]=='"' || string[0]==",") 
-        {
+            if(data[i] == '[')
+            {
+                layer +=1
+                temparray = []
+                letterstorage.emptynodes()
+
+            }
+            else if(data[i] == ']')
+            {
+                layer -=1
+                if(layer == 1){
+                    products.push(temparray)
+                    temparray = []
+                }
+                // temparray.push(letterstorage.buildtxt())
+            }
+            else if(data[i] == '"' || data[i] == ',')
+            {
+                if(letterstorage.isempty()){
+                   
+                    console.log("skip") 
+                }
+                else
+                {
+                    temparray.push(letterstorage.buildtxt())
+                    letterstorage.emptynodes()
+                    
+                }
+            }
+            else
+            {
+                let queue = new queuenode(front=data[i])
+                if(letterstorage.front == null)
+                {
+                    letterstorage.front = queue.front
+                }
+                else
+                letterstorage.enqueue(queue)
+            }
 
         }
+        return products
     }
+    // function backtoarray(string)
+    // {
+    //     if(string[0]=="[")
+    //     {
+    //         array = []
+    //         array.concat(backtoarray(string.substr(1)))
+    //         return array
+    //     }
+    //     else if(string[0]=='"' || string[0]==",") 
+    //     {
+
+    //     }
+    // }
     function starify(rating)
     {
         if (rating > 10) rating= 10;
@@ -116,7 +246,7 @@ session_start()
         let rating = starhtml(starify(data[3]))
         let name = data[4]
 
-        let html = `<div class="product">
+        let html = `<div class="pcontainer"><div class="product">
             <div class="images">
                 <div class="img1" style="background-image: url(${pics[0]})"></div>
                 <div class="img2" style="background-image: url(${pics[1]})"></div>
@@ -127,7 +257,7 @@ session_start()
                 <h2 class="price">${price}</h2>
                 <button class="tocart"><p>add to cart</p></button>
             </div>
-        </div>
+        </div></div>
         
         `
         return html
@@ -143,7 +273,7 @@ session_start()
         return html
     }
 
-    let products = process(data) 
+    let products = process(convertphparray(data)) 
 
     $(document).ready(function () {
         $(".products").html(products);
@@ -190,23 +320,122 @@ session_start()
     width: 12px;
 }
 .products{
-    display: flex;
+    /* display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    align-items:flex-start;
+    justify-content: flex-start;
+    align-items:flex-start; */
+    margin-top: 10px;
+    display: inline-grid;
+    gap: 10px 10px;
+    width: 100vw;
+    box-sizing: border-box;
+    /* grid-template-columns: auto auto auto auto; */
+
 }
+
+/* @media (max-width:1024px) {
+    .products{
+        grid-template-columns: auto auto auto;
+    }
+} */
+
+@media (max-width:990px) {
+    .products{
+        grid-template-columns: 50% 50% ;
+    }
+
+    /* .product
+    {
+        width: 350px;
+    } */
+    
+}
+
+@media (max-width:1440px) {
+    .products{
+        grid-template-columns: auto auto auto auto;
+    }
+}
+
+@media (max-width:2560px) {
+    .products{
+        grid-template-columns: 20% 20% 20% 20% 20% ;
+    }
+}
+
+@media (max-width:1024px) {
+    .products{
+        grid-template-columns: 33% 33% 33%;
+    }
+}
+
 .product{
-    max-width: 400px;
-    flex-grow: 1;
-    height: 400px;
+    /* max-width: 400px; */
+    /* width: 100%; */
+    /* flex-grow: 1; */
+    height: 500px;
     background-color: #d696b8;
-    margin: 30px;
-    box-shadow: 5px 12px 13px 2px rgba(0,0,0,0.21);
+    margin: 0px;
+    /* border: solid #fee5a3; */
+    /* box-shadow: 5px 12px 13px 2px rgba(0,0,0,0.21); */
     padding: 10px;
     box-sizing: border-box;
+    /* width: 320px; */
+    /* width: auto; */
+    width: 100%;
+    /* max-width: 320px; */
 
 }
+.pcontainer{
+    display: flex;
+    justify-content: center;
+}
+.ratings{
+    display: flex;
+}
 
+.img1{
+   height: 190px; 
+   width:50%;
+   background-size: cover;
+   background-position: center;
+}
+.img2{
+    height: 190px; 
+   width:50%;
+   background-size: cover;
+   background-position: center;
+}
+.images{
+    display: flex ;
+}
 
+body
+{
+    margin: 0px;
+    padding: 0px;
+}
+.price::before{
+ content: "$";
+}
+.tocart{
+    width: 100%;
+    background-color: #f7da96;
+    border:  solid 1px wheat;
+    transition: all 0.3s;
+}
+.tocart:hover
+{
+    background-color: #aa9667;
+    border: none;
+}
+
+.selection{
+    background-color: #f7da96;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    width: 90px;
+}
 </style>
 </html>
